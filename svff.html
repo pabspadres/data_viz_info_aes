@@ -29,7 +29,7 @@
     const svg = d3.select("#viz");
     const margin = {x:50, y:100, w:850, h:500}; // y shifted down to make room for title
 
-    // === TITLE & SUBTITLE ===
+    
     svg.append("text")
       .attr("x", margin.x + margin.w/2)
       .attr("y", 40)
@@ -44,7 +44,7 @@
       .attr("class", "subtitle")
       .text("How one garment goes through the market");
 
-    // margin rectangle
+    
     svg.append("rect")
       .attr("x", margin.x)
       .attr("y", margin.y)
@@ -55,11 +55,10 @@
       .attr("stroke-width", 2)
       .attr("rx", 15);
 
-    // colors
+  
     const red = "#ff2b2b", redLight = "#ff9b9b";
     const magenta = "#ff00b3", magentaLight = "#ff80df";
 
-    // === RED TIMELINE ===
     const redPath = d3.path();
     const redStart = [margin.x+140, margin.y+margin.h-40];
     redPath.moveTo(...redStart);
@@ -89,7 +88,7 @@
       svg.append("text").attr("x", r.x+r.w/2).attr("y", r.y+42).attr("text-anchor","middle").attr("class","rect-sub").text(r.sub);
     });
 
-    // === MAGENTA TIMELINE ===
+   
     const magPath = d3.path();
     const magStart = [margin.x, margin.y+margin.h/2];
     magPath.moveTo(...magStart);
@@ -121,7 +120,7 @@
       svg.append("text").attr("x", r.x+r.w/2).attr("y", r.y+42).attr("text-anchor","middle").attr("class","rect-sub").text(r.sub);
     });
 
-    // === LEGEND ===
+   
     const legendY = margin.y+margin.h+70;
     svg.append("line").attr("x1", margin.x+50).attr("y1", legendY).attr("x2", margin.x+90).attr("y2", legendY)
       .attr("stroke", red).attr("stroke-width",3).attr("stroke-dasharray","6,6");
