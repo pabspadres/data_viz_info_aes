@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sustainable vs. Fast Fashion</title>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background-color: black;
+      font-family: "Montserrat", sans-serif;
+      color: white;
+      text-align: center;
+      margin: 0;
+      padding: 20px;
+    }
+    svg { display: block; margin: 0 auto; }
+    .title { font-weight: 700; font-size: 28px; fill: white; }
+    .subtitle { font-weight: 400; font-size: 16px; fill: white; }
+    .rect-title { font-weight: 700; font-size: 14px; fill: white; }
+    .rect-sub { font-weight: 400; font-size: 12px; fill: white; }
+    .legend-text { font-size: 14px; fill: white; dominant-baseline: middle; }
+  </style>
+</head>
+<body>
+  <svg id="viz" width="950" height="750"></svg>
+
+  <script>
+    const svg = d3.select("#viz");
+    const margin = {x:50, y:100, w:850, h:500}; // y shifted down to make room for title
+
+    // === TITLE & SUBTITLE ===
+    svg.append("text")
+      .attr("x", margin.x + margin.w/2)
+      .attr("y", 40)
+      .attr("text-anchor", "middle")
+      .attr("class", "title")
+      .text("Sustainable vs. Fast Fashion");
+
+    svg.append("text")
+      .attr("x", margin.x + margin.w/2)
+      .attr("y", 70)
+      .attr("text-anchor", "middle")
+      .attr("class", "subtitle")
+      .text("How one garment goes through the market");
+
+    // margin rectangle
+    svg.append("rect")
+      .attr("x", margin.x)
+      .attr("y", margin.y)
+      .attr("width", margin.w)
+      .attr("height", margin.h)
+      .attr("fill", "none")
+      .attr("stroke", "white")
+      .attr("stroke-width", 2)
+      .attr("rx", 15);
+
+    // colors
+    const red = "#ff2b2b", redLight = "#ff9b9b";
+    const magenta = "#ff00b3", magentaLight = "#ff80df";
+
+    // === RED TIMELINE ===
+    const redPath = d3.path();
+    const redStart = [margin.x+140, margin.y+margin.h-40];
+    redPath.moveTo(...redStart);
+    redPath.lineTo(redStart[0], margin.y+140);
+    redPath.quadraticCurveTo(redStart[0], margin.y+80, redStart[0]+140, margin.y+110);
+    redPath.lineTo(margin.x+margin.w-40, margin.y+110);
+
+    svg.append("path")
+      .attr("d", redPath.toString())
+      .attr("stroke", red)
+      .attr("stroke-width", 3)
+      .attr("stroke-dasharray", "6,6")
+      .attr("fill", "none");
+
+    const redRects = [
+      {x: margin.x+20, y: margin.y+margin.h-100, w: 200, title:"Completion of Garment", sub:"Month 4"},
+      {x: redStart[0]+20, y: margin.y+70, w: 200, title:"Market Peak of Garment", sub:"Month 10"},
+      {x: margin.x+margin.w-240, y: margin.y+60, w: 200, title:"Life After Peak", sub:"Month 14"}
+    ];
+    redRects.forEach(r=>{
+      svg.append("rect")
+        .attr("x", r.x).attr("y", r.y)
+        .attr("width", r.w).attr("height", 55)
+        .attr("rx",10).attr("ry",10)
+        .attr("fill", redLight);
+      svg.append("text").attr("x", r.x+r.w/2).attr("y", r.y+22).attr("text-anchor","middle").attr("class","rect-title").text(r.title);
+      svg.append("text").attr("x", r.x+r.w/2).attr("y", r.y+42).attr("text-anchor","middle").attr("class","rect-sub").text(r.sub);
+    });
+
+    // === MAGENTA TIMELINE ===
+    const magPath = d3.path();
+    const magStart = [margin.x, margin.y+margin.h/2];
+    magPath.moveTo(...magStart);
+    magPath.lineTo(redStart[0], magStart[1]);
+    magPath.quadraticCurveTo(redStart[0]+120, magStart[1]-100, redStart[0]+180, margin.y+130);
+    magPath.quadraticCurveTo(redStart[0]+200, margin.y+200, redStart[0]+200, margin.y+margin.h-120);
+    magPath.quadraticCurveTo(redStart[0]+230, margin.y+margin.h-20, redStart[0]+270, margin.y+margin.h-80);
+
+    svg.append("path")
+      .attr("d", magPath.toString())
+      .attr("stroke", magenta)
+      .attr("stroke-width", 3)
+      .attr("stroke-dasharray", "6,6")
+      .attr("fill", "none");
+
+    const magRects = [
+      {x: margin.x+40, y: magStart[1]+30, w: 210, title:"Completion of Garment", sub:"Month 8"},
+      {x: redStart[0]+200, y: margin.y+160, w: 210, title:"Market Peak of Garment", sub:"Month 10"},
+      {x: redStart[0]+230, y: margin.y+260, w: 210, title:"Life After Peak", sub:"Month 12"},
+      {x: redStart[0]+250, y: margin.y+margin.h-150, w: 220, title:"Repetition of The Cycle", sub:"Month 48"}
+    ];
+    magRects.forEach(r=>{
+      svg.append("rect")
+        .attr("x", r.x).attr("y", r.y)
+        .attr("width", r.w).attr("height", 55)
+        .attr("rx",10).attr("ry",10)
+        .attr("fill", magentaLight);
+      svg.append("text").attr("x", r.x+r.w/2).attr("y", r.y+22).attr("text-anchor","middle").attr("class","rect-title").text(r.title);
+      svg.append("text").attr("x", r.x+r.w/2).attr("y", r.y+42).attr("text-anchor","middle").attr("class","rect-sub").text(r.sub);
+    });
+
+    // === LEGEND ===
+    const legendY = margin.y+margin.h+70;
+    svg.append("line").attr("x1", margin.x+50).attr("y1", legendY).attr("x2", margin.x+90).attr("y2", legendY)
+      .attr("stroke", red).attr("stroke-width",3).attr("stroke-dasharray","6,6");
+    svg.append("text").attr("x", margin.x+100).attr("y", legendY).attr("class","legend-text").text("Sustainable Fashion Garment");
+
+    svg.append("line").attr("x1", margin.x+450).attr("y1", legendY).attr("x2", margin.x+490).attr("y2", legendY)
+      .attr("stroke", magenta).attr("stroke-width",3).attr("stroke-dasharray","6,6");
+    svg.append("text").attr("x", margin.x+500).attr("y", legendY).attr("class","legend-text").text("Fast Fashion Garment");
+  </script>
+</body>
+</html>
